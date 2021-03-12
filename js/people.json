@@ -1,0 +1,22 @@
+[
+    {
+        "firstName":"Chris",
+        "lastName":"Miss",
+        "email":"cmiss@gmail.com"
+    },
+    {
+        "firstName":"Nick",
+        "lastName":"Slick",
+        "email":"nslick@yahoo.com"
+    },
+    {
+        "firstName":"Kay",
+        "lastName":"Bay",
+        "email":"kbay@aol.com"
+    },
+    {
+        "firstName":"Cat",
+        "lastName":"Pat",
+        "email":"cpat@comcast.net"
+    }
+]

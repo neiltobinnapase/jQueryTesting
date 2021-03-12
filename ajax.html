@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+	<script src="js/jquery-3.6.0.min.js"></script>
+    <title>jQuery Testing - AJAX</title>
+</head>
+<body>
+    <header id="headingContainer">
+        <h1>jQuery Testing</h1>
+        <a href="index.html"><b>Start</b></a>
+        <a href="animate.html"><b>Animate</b></a>
+        <a href="ajax.html"><b>AJAX</b></a>
+    </header>
+
+    <div id="contentContainer">
+        <div id="loadContainer"></div>
+        <p>Above content was loaded using jQuery function .load() on div object</p>
+        <div id="getContainer"></div>
+        <p>Above content was loaded using global jQuery function .get() to retrieve data, then update div object in callback function</p>
+        <hr />
+        <p>Below list was generated after loading local people.json file using global jQuery function .getJSON, then appending li items to ul object in callback function</p>
+        <ul id="peopleList"></ul>
+        <p>Below content was generated after loading json data from online url using global jQuery function .ajax, appending header and paragraph content from loaded object</p>
+        <div id="ajaxContainer"></div>
+        <hr />
+
+        <div id ="postContainer">
+            <h2>Submit Post</h2>
+            <form id="postForm" action="https://jsonplaceholder.typicode.com/posts">
+                <input type="text" id="title" placeholder="Post Title"> <br />
+                <textarea id="body" placeholder="Type your post here"></textarea> <br />
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#loadContainer').load('temp.html', function(responseTxt, statusTxt, xhr){
+                if(statusTxt == "success"){
+                    console.log('Successfully loaded content');
+                }
+                else if(statusTxt == "error"){
+                    console.log('Error: ' + xhr.statusText);
+                }
+            });
+            
+            $.get('temp.html', function(data){
+                $('#getContainer').html(data);
+            });
+
+            $.getJSON('js/people.json', function(data){
+                $.each(data, function(i, person){
+                    $('ul#peopleList').append('<li>This person is ' + person.firstName + ' ' + person.lastName + '</li>');
+                });
+            });
+
+            $.ajax({
+                method:'GET',
+                url: 'https://jsonplaceholder.typicode.com/posts?id=100',
+                dataType: 'json'
+            }).done(function(data){
+                $.each(data, function(i, post){
+                    $('#ajaxContainer').append('<h3>'+post.title+'</h3><p>'+post.body+'</p>');
+                });
+            }).fail(function(jqXHR, textStatus, errorThrown){
+                    console.log('Unable to retrieve data, returned status Text: ' + textStatus);
+            });
+
+
+            $('#postForm').submit(function(e){
+                e.preventDefault();
+                var title = $('#title').val();
+                var body = $('#body').val();
+                var url = $(this).attr('action');
+
+                if(title.length >= 1 && body.length >=1){
+                    $.post(url, {title:title, body:body}).
+                        done(function(data){
+                            console.log(data);
+                            $('#title').val('');
+                            $('#body').val('');
+                            alert("Post submitted using global jQuery function .post(), sending data input from form. You can view the JSON data in the developer console (F12)");
+                    });
+                }
+                else{
+                    alert("Make sure both title and body are filled before submitting");
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
